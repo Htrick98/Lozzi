@@ -1,6 +1,5 @@
 import threading, requests
-import time, locale
-from datetime import datetime
+import time
 from requests.structures import CaseInsensitiveDict
 baseUrl="https://api.superlozzi.com/v2/"
 next_file=0
@@ -63,8 +62,8 @@ def App(line):
 						total_xc+=xc_amount
 					elif ISSUE3_J["xc_amount"] == 1:
 						next_file+=1
-				#else:
-					#print(XC_DEF_J)
+				else:
+					print(XC_DEF.status_code)
 			except requests.exceptions.ConnectionError:
 				print("requests.exceptions.ConnectionError")
 			except Exception as error:
@@ -97,7 +96,7 @@ i=1
 while True:
 	if next_file == 15:
 		i+=1
-		next=0
+		next_file=0
 		print("witing 10 min")
 		time.sleep(660)
 		MainApp(i)
