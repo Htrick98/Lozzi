@@ -3,10 +3,8 @@ import time
 from requests.structures import CaseInsensitiveDict
 baseUrl="https://api.superlozzi.com/v2/"
 next_file=0
-c=0
 def App(line):
 	global next_file
-	global c
 	headers = CaseInsensitiveDict()
 	headers["host"] = "z7api.superlozzi.com"
 	headers["x-locale"] = "en"
@@ -33,7 +31,6 @@ def App(line):
 				XC_DEF_J=XC_DEF.json()
 				if XC_DEF.status_code == 200:
 					xc_amount=0
-					c+=1
 					for box in XC_DEF_J["box_common"]:
 						if box["xc_tp_cd_id"] == "XC_EVNT_0003":
 							path="XC_ISSUE_BOX_COMMON_WITHOUT_AD"
@@ -59,11 +56,11 @@ def App(line):
 					if ISSUE3_J["xc_amount"] > 1:
 						ta=(int(U_Info_J["xc_amount"])+xc_amount)
 						d=int(float(ta/1000000))
-						print(f'{U_Info_J["user_info"]["user_nm"]} | {xc_amount} | {ta:,} | {d} \n {c}')
+						print(f'{U_Info_J["user_info"]["user_nm"]} | {xc_amount} | {ta:,} | {d}')
 					elif ISSUE3_J["xc_amount"] == 1:
 						next_file+=1
-				else:
-					print(XC_DEF.status_code)
+				#else:
+				#	print(XC_DEF.status_code)
 			except requests.exceptions.ConnectionError:
 				print("requests.exceptions.ConnectionError")
 			except Exception as error:
@@ -79,7 +76,10 @@ def App(line):
 		print("exp 2")
 		
 threads = []
+i=1
 def MainApp(_i):
+	global i
+	global next_file
 	path=f"token{_i}.txt"
 	with open(path, 'r') as f:
 		for line in f:
@@ -91,15 +91,15 @@ def MainApp(_i):
 			th.join()
 		
 		f.close()
+		if next_file == 15:
+			i+=1
+			next_file=0
+			print("witing 10 min")
+			time.sleep(660)
+			MainApp(i)
+		else:
+			time.sleep(30)
+			MainApp(i)
 		
-i=1
-while True:
-	if next_file == 15:
-		i+=1
-		next_file=0
-		print("witing 10 min")
-		time.sleep(660)
-		MainApp(i)
-	else:
-		MainApp(i)
+	
 
