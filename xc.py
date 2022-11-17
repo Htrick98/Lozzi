@@ -3,8 +3,12 @@ import time
 from requests.structures import CaseInsensitiveDict
 baseUrl="https://api.superlozzi.com/v2/"
 next_file=0
+total_xc=0
+c=0
 def App(line):
 	global next_file
+	global total_xc
+	global c
 	headers = CaseInsensitiveDict()
 	headers["host"] = "z7api.superlozzi.com"
 	headers["x-locale"] = "en"
@@ -57,6 +61,8 @@ def App(line):
 						ta=(int(U_Info_J["xc_amount"])+xc_amount)
 						d=int(float(ta/1000000))
 						print(f'{U_Info_J["user_info"]["user_nm"]} | {xc_amount} | {ta:,} | {d}')
+						total_xc+=xc_amount
+						c+=1
 					elif ISSUE3_J["xc_amount"] == 1:
 						next_file+=1
 				#else:
@@ -89,7 +95,8 @@ def MainApp(_i):
 			
 		for th in threads:
 			th.join()
-		
+		print("xc cleam : ",total_xc)
+		print("conter : ",c)
 		f.close()
 		if next_file == 15:
 			i+=1
@@ -102,4 +109,4 @@ def MainApp(_i):
 			MainApp(i)
 		
 	
-
+MainApp(i)
