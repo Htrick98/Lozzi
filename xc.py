@@ -3,10 +3,10 @@ import time
 from requests.structures import CaseInsensitiveDict
 baseUrl="https://api.superlozzi.com/v2/"
 next_file=0
-total_xc=0
+c=0
 def App(line):
 	global next_file
-	global total_xc
+	global c
 	headers = CaseInsensitiveDict()
 	headers["host"] = "z7api.superlozzi.com"
 	headers["x-locale"] = "en"
@@ -33,6 +33,7 @@ def App(line):
 				XC_DEF_J=XC_DEF.json()
 				if XC_DEF.status_code == 200:
 					xc_amount=0
+					c+=1
 					for box in XC_DEF_J["box_common"]:
 						if box["xc_tp_cd_id"] == "XC_EVNT_0003":
 							path="XC_ISSUE_BOX_COMMON_WITHOUT_AD"
@@ -58,8 +59,7 @@ def App(line):
 					if ISSUE3_J["xc_amount"] > 1:
 						ta=(int(U_Info_J["xc_amount"])+xc_amount)
 						d=int(float(ta/1000000))
-						print(f'{U_Info_J["user_info"]["user_nm"]} | {xc_amount} | {ta:,} | {d}')
-						total_xc+=xc_amount
+						print(f'{U_Info_J["user_info"]["user_nm"]} | {xc_amount} | {ta:,} | {d} \n {c}')
 					elif ISSUE3_J["xc_amount"] == 1:
 						next_file+=1
 				else:
