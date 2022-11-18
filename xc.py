@@ -83,11 +83,11 @@ def App(line):
 		print("exp 2")
 		
 threads = []
-i=4
+i=1
 def MainApp(_i):
 	global i
 	global next_file
-	path=f"/storage/emulated/0/Python/SuperLozzi/GroupV2/TokenV2/token{_i}.txt"
+	path=f"token{_i}.txt"
 	with open(path, 'r') as f:
 		for line in f:
 			t = threading.Thread(target=App, args=[line])
