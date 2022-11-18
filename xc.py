@@ -63,6 +63,7 @@ def App(line):
 						print(f'{U_Info_J["user_info"]["user_nm"]} | {xc_amount} | {ta:,} | {d}')
 						total_xc+=xc_amount
 						c+=1
+						next_file=0
 					elif ISSUE3_J["xc_amount"] == 1:
 						next_file+=1
 				#else:
@@ -82,11 +83,11 @@ def App(line):
 		print("exp 2")
 		
 threads = []
-i=1
+i=4
 def MainApp(_i):
 	global i
 	global next_file
-	path=f"token{_i}.txt"
+	path=f"/storage/emulated/0/Python/SuperLozzi/GroupV2/TokenV2/token{_i}.txt"
 	with open(path, 'r') as f:
 		for line in f:
 			t = threading.Thread(target=App, args=[line])
@@ -95,7 +96,7 @@ def MainApp(_i):
 			
 		for th in threads:
 			th.join()
-		print("xc cleam : ",total_xc)
+		print(f"xc cleam : {total_xc:,}")
 		print("conter : ",c)
 		f.close()
 		if next_file == 15:
