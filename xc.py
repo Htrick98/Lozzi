@@ -57,14 +57,14 @@ def App(line):
 						ISSUE3 = requests.post(baseUrl+path, timeout=60, headers=headers, data=data3)
 						ISSUE3_J=ISSUE3.json()
 						xc_amount+=ISSUE3_J["xc_amount"]
-					if ISSUE3_J["xc_amount"] > 1:
+					if int(ISSUE3_J["xc_amount"]) > 1:
 						ta=(int(U_Info_J["xc_amount"])+xc_amount)
 						d=int(float(ta/1000000))
 						print(f'{U_Info_J["user_info"]["user_nm"]} | {xc_amount} | {ta:,} | {d}')
 						total_xc+=xc_amount
 						c+=1
 						next_file=0
-					elif ISSUE3_J["xc_amount"] == 1:
+					if int(ISSUE3_J["xc_amount"]) == 1:
 						next_file+=1
 				#else:
 				#	print(XC_DEF.status_code)
@@ -84,10 +84,12 @@ def App(line):
 		
 threads = []
 i=1
+
 def MainApp(_i):
 	global i
 	global next_file
-	path=f"token{_i}.txt"
+	#path=f"token{_i}.txt"
+	path=f"/storage/emulated/0/Python/SuperLozzi/GroupV2/TokenV2/token{_i}.txt"
 	with open(path, 'r') as f:
 		for line in f:
 			t = threading.Thread(target=App, args=[line])
