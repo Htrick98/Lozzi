@@ -83,13 +83,13 @@ def App(line):
 		print("exp 2")
 		
 threads = []
-i=1
+i=3
 
 def MainApp(_i):
 	global i
 	global next_file
-	#path=f"token{_i}.txt"
-	path=f"/storage/emulated/0/Python/SuperLozzi/GroupV2/TokenV2/token{_i}.txt"
+	path=f"token{_i}.txt"
+	#path=f"/storage/emulated/0/Python/SuperLozzi/GroupV2/TokenV2/token{_i}.txt"
 	with open(path, 'r') as f:
 		for line in f:
 			t = threading.Thread(target=App, args=[line])
@@ -101,15 +101,17 @@ def MainApp(_i):
 		print(f"xc cleam : {total_xc:,}")
 		print("conter : ",c)
 		f.close()
-		if next_file == 15:
-			i+=1
-			next_file=0
-			print("witing 10 min")
-			time.sleep(660)
-			MainApp(i)
-		else:
-			time.sleep(30)
-			MainApp(i)
 		
-	
-MainApp(i)
+while True:
+	if next_file >= 15:
+		if i <= 6:
+			i+=1
+		else:
+			i=1
+		next_file=0
+		print("witing 10 min")
+		time.sleep(660)
+		MainApp(i)
+	else:
+		MainApp(i)
+		time.sleep(30)
