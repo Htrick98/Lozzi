@@ -40,10 +40,13 @@ def App(d,t):
 		else:
 			print(XC_DEF_J)
 	except requests.exceptions.ConnectionError:
-		print("requests.exceptions.ConnectionError")
-	
+		App(d,t)
+	except Exception as error:
+		print("")
+		
 def WITHOUT_AD(box,d,t):
-		global total_xc
+	global total_xc
+	try:
 		path="v2/XC_ISSUE_BOX_COMMON_WITHOUT_AD"
 		data1=f'seq_no={box["seq_no"]}&box_key={box["box_key"]}'
 		ISSUE1 = requests.post(baseUrl+path, headers=setHeader(d,t), data=data1)
@@ -51,9 +54,14 @@ def WITHOUT_AD(box,d,t):
 			ISSUE1_J=ISSUE1.json()
 			total_xc+=ISSUE1_J["xc_amount"]
 			#print(ISSUE1_J["xc_amount"])
-							
+	except requests.exceptions.ConnectionError:
+		WITHOUT_AD(box,d,t)
+	except Exception as error:
+		print("")
+
 def WITH_AD(box,d,t):
-		global total_xc
+	global total_xc
+	try:
 		path="v2/XC_ISSUE_BOX_COMMON_WITH_AD"
 		data2=f'seq_no={box["seq_no"]}&box_key={box["box_key"]}'
 		ISSUE2 = requests.post(baseUrl+path, headers=setHeader(d,t), data=data2)
@@ -61,9 +69,14 @@ def WITH_AD(box,d,t):
 			ISSUE2_J=ISSUE2.json()
 			total_xc+=ISSUE2_J["xc_amount"]
 			#print(ISSUE2_J["xc_amount"])
-			
+	except requests.exceptions.ConnectionError:
+		WITH_AD(box,d,t)
+	except Exception as error:
+		print("")
+				
 def BOX_GOLD(boxG,d,t):
-		global total_xc
+	global total_xc
+	try:
 		path="v2/XC_ISSUE_BOX_GOLD"
 		data3=f'xc_cd_id_r=XC_RATE_0000&seq_no={boxG["seq_no"]}&box_key={int(boxG["box_key"])}'
 		ISSUE3 = requests.post(baseUrl+path, headers=setHeader(d,t), data=data3)
@@ -73,7 +86,11 @@ def BOX_GOLD(boxG,d,t):
 			#print(ISSUE3_J["xc_amount"])
 		else:
 			print(ISSUE3.json())
-	
+	except requests.exceptions.ConnectionError:
+		BOX_GOLD(boxG,d,t)
+	except Exception as error:
+		print("")
+
 def USER_INFO(d,t):
     path = "v2/XC_USER_INFO"
     try:
@@ -85,7 +102,9 @@ def USER_INFO(d,t):
     		App(d,t)
     		print(f'{int(U_Info_J["xc_amount"]):,}')
     except requests.exceptions.ConnectionError:
-    	print("requests.exceptions.ConnectionError")
+    	USER_INFO(d,t)
+    except Exception as error:
+    	print("")
 
 def Go(d,t):
 	while True:
@@ -93,14 +112,17 @@ def Go(d,t):
 		
 list_th = []
 def getContent():
-	url="https://raw.githubusercontent.com/Htrick98/Lozzi/main/maillist1.txt"
-	response = requests.get(url)
-	for line in response.iter_lines():
-		acc=line.decode("utf-8").strip()
-		d = acc.split('|')[1]
-		t = acc.split('|')[3]
-		list_th.append(threading.Thread(target=Go, args=(d,t)))
-
+	try:
+		url="https://raw.githubusercontent.com/Htrick98/Lozzi/main/maillist1.txt"
+		response = requests.get(url)
+		for line in response.iter_lines():
+			acc=line.decode("utf-8").strip()
+			d = acc.split('|')[1]
+			t = acc.split('|')[3]
+			list_th.append(threading.Thread(target=Go, args=(d,t)))
+	except requests.exceptions.ConnectionError:
+		getContent()
+		
 getContent()
 for th in list_th:
 	th.start()
